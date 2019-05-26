@@ -1,7 +1,19 @@
 package main
 
-import "fmt"
+import (
+	"encoding/json"
+	"net/http"
 
-func main() {
-	fmt.Println("SRAPI")
+	"github.com/gorilla/mux"
+)
+
+func startServer() http.Handler {
+	srv := mux.NewRouter()
+	srv.HandleFunc("/", getDummy)
+	return srv
+}
+
+func getDummy(w http.ResponseWriter, r *http.Request) {
+	json.NewEncoder(w).Encode("SRAPI")
+	return
 }

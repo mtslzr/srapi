@@ -13,7 +13,7 @@ cd srapi
 ### Build
 
 ```bash
-go build
+go build -o srapi
 ```
 
 ## Usage

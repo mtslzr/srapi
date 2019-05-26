@@ -6,9 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Added CHANGELOG.
-- Added CONTRIBUTERS.
-- Added gitignore.
-- Added MIT license.
-- Added README with basic information.
-- Added srapi.go (with dummy function).
+- Base project files:
+  - Changelog
+  - Contributors file
+  - gitignore
+  - MIT license
+  - README
+- Endpoints (Baseball only):
+  - Dummy GET
