@@ -9,5 +9,5 @@ CREATE TABLE IF NOT EXISTS "sports" (
 	"years"	char(50) NOT NULL,
 	PRIMARY KEY("id")
 );
-INSERT INTO sports VALUES('bs','Baseball','baseball-reference.com','leagues/MLB/2019-standings.shtml','leagues/MLB/{year}.shtml','leagues/MLB/{year}.shtml');
+INSERT INTO sports VALUES('bs','Baseball','baseball-reference.com','leagues/MLB/{year}-standings.shtml','teams','leagues/MLB/{year}.shtml');
 COMMIT;

@@ -11,7 +11,8 @@ func bsStandings(bs Sport) (map[string][]string, error) {
 	leagues := []string{"AL", "NL"}
 	divisions := []string{"E", "C", "W"}
 
-	res, err := soup.Get("https://" + bs.Host + "/" + bs.Standings)
+	res, err := soup.Get("https://" + bs.Host + "/" +
+		strings.Replace(bs.Standings, "{year}", "2019", 1))
 	if err != nil {
 		return stands, err
 	}

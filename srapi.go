@@ -21,41 +21,44 @@ type Sport struct {
 
 func startServer() http.Handler {
 	srv := mux.NewRouter()
-	srv.HandleFunc("/", getDummy).Methods("GET")
-	srv.HandleFunc("/{sport}", getSport).Methods("GET")
 	srv.HandleFunc("/{sport}/standings", getStandings).Methods("GET")
+	srv.HandleFunc("/{sport}/teams", getTeams).Methods("GET")
 	return srv
 }
 
-func getDummy(w http.ResponseWriter, r *http.Request) {
-	out, _ := json.Marshal("SRAPI")
-	sendResponse(200, out, w)
-	return
-}
-
-func getSport(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	sport, err := queryDb(params["sport"])
+func getSport(id string, w http.ResponseWriter) Sport {
+	sport, err := queryDb(id)
 	if err != nil {
-		out, _ := json.Marshal("Sport not found.")
+		out, _ := json.Marshal(err)
 		sendResponse(500, out, w)
-	} else {
-		out, _ := json.Marshal(sport)
-		sendResponse(200, out, w)
 	}
-	return
+	return sport
 }
 
 func getStandings(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	sport, err := queryDb(params["sport"])
+	sport := getSport(params["sport"], w)
+
+	stand, err := bsStandings(sport)
 	if err != nil {
-		out, _ := json.Marshal("Sport not found.")
+		out, _ := json.Marshal(err)
 		sendResponse(500, out, w)
-		return
 	}
-	stand, _ := bsStandings(sport)
-	out, err := json.Marshal(stand)
+	out, _ := json.Marshal(stand)
+	sendResponse(200, out, w)
+	return
+}
+
+func getTeams(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	sport := getSport(params["sport"], w)
+
+	teams, err := bsTeams(sport)
+	if err != nil {
+		out, _ := json.Marshal(err)
+		sendResponse(500, out, w)
+	}
+	out, _ := json.Marshal(teams)
 	sendResponse(200, out, w)
 	return
 }
