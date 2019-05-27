@@ -1,7 +1,9 @@
 package main
 
 import (
+	"strconv"
 	"strings"
+	"time"
 
 	"github.com/anaskhan96/soup"
 )
@@ -12,12 +14,11 @@ func bsStandings(bs Sport) (map[string][]string, error) {
 	divisions := []string{"E", "C", "W"}
 
 	res, err := soup.Get("https://" + bs.Host + "/" +
-		strings.Replace(bs.Standings, "{year}", "2019", 1))
+		strings.Replace(bs.Standings, "{year}", strconv.Itoa(time.Now().Year()), 1))
 	if err != nil {
 		return stands, err
 	}
 	doc := soup.HTMLParse(res)
-
 	for _, div := range divisions {
 		tables := doc.FindAll("div", "id", "all_standings_"+div)
 		for x, table := range tables {

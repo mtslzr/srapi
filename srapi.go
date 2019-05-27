@@ -23,6 +23,7 @@ func startServer() http.Handler {
 	srv := mux.NewRouter()
 	srv.HandleFunc("/{sport}/standings", getStandings).Methods("GET")
 	srv.HandleFunc("/{sport}/teams", getTeams).Methods("GET")
+	srv.HandleFunc("/{sport}/years", getYears).Methods("GET")
 	return srv
 }
 
@@ -59,6 +60,20 @@ func getTeams(w http.ResponseWriter, r *http.Request) {
 		sendResponse(500, out, w)
 	}
 	out, _ := json.Marshal(teams)
+	sendResponse(200, out, w)
+	return
+}
+
+func getYears(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	sport := getSport(params["sport"], w)
+
+	years, err := bsYears(sport)
+	if err != nil {
+		out, _ := json.Marshal(err)
+		sendResponse(500, out, w)
+	}
+	out, _ := json.Marshal(years)
 	sendResponse(200, out, w)
 	return
 }

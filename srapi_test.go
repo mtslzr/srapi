@@ -41,3 +41,13 @@ func TestGetTeams(t *testing.T) {
 	assert.Contains(t, res.Body.String(), "Minnesota Twins",
 		"Expected result contains 'Minnesota Twins'")
 }
+
+// Test GetTeams for current baseball teams.
+func TestGetYears(t *testing.T) {
+	res := startEndpoint("/bs/years")
+	assert.Equal(t, 200, res.Code, "Expected OK response")
+	assert.Contains(t, res.Body.String(), "2019",
+		"Expected result contains '2019'")
+	assert.Contains(t, res.Body.String(), "1876",
+		"Expected result contains '1876'")
+}

@@ -9,9 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Endpoints (Baseball only):
   - GetStandings
   - GetTeams
-  - GetYear
+  - GetYears
 - Travis CI
 - Unit Tests
+### Changed
+- Endpoints (Baseball only):
+  - Converted GetSport to internal call (removed from router)
+### Removed
+- Endpoints (Baseball only):
+  - GetDummy
 
 ## [0.1.0] - 2019.05.26
 ### Added
