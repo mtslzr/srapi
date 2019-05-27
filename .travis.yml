@@ -3,8 +3,7 @@ language: go
 go:
   - 1.12.x
 
-before_script:
-  - cat srapi.sql | sqlite3 srapi.db
+before_script: cat srapi.sql | sqlite3 srapi.db
 
 script: go test -v ./...
 
