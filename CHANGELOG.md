@@ -14,3 +14,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - README
 - Endpoints (Baseball only):
   - Dummy GET
+
+[Unreleased]: https://github.com/mtslzr/srapi/tree/develop

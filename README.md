@@ -13,6 +13,7 @@ cd srapi
 ### Build
 
 ```bash
+go get ./...
 go build -o srapi
 ```
 
@@ -25,7 +26,11 @@ Starting server on localhost:5000...
 
 ### Endpoints
 
-_Coming soon..._
+#### Dummy
+
+```
+GET - /
+```
 
 ## Contribution
 
