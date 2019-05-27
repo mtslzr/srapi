@@ -23,6 +23,7 @@ func startServer() http.Handler {
 	srv := mux.NewRouter()
 	srv.HandleFunc("/", getDummy).Methods("GET")
 	srv.HandleFunc("/{sport}", getSport).Methods("GET")
+	srv.HandleFunc("/{sport}/standings", getStandings).Methods("GET")
 	return srv
 }
 
@@ -42,6 +43,20 @@ func getSport(w http.ResponseWriter, r *http.Request) {
 		out, _ := json.Marshal(sport)
 		sendResponse(200, out, w)
 	}
+	return
+}
+
+func getStandings(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	sport, err := queryDb(params["sport"])
+	if err != nil {
+		out, _ := json.Marshal("Sport not found.")
+		sendResponse(500, out, w)
+		return
+	}
+	stand, _ := bsStandings(sport)
+	out, err := json.Marshal(stand)
+	sendResponse(200, out, w)
 	return
 }
 
