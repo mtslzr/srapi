@@ -14,7 +14,8 @@ func TestGetDummy(t *testing.T) {
 	startServer().ServeHTTP(res, req)
 
 	assert.Equal(t, 200, res.Code, "Expected OK response")
-	assert.Equal(t, "SRAPI", res.Body.String(), "Expected 'SRAPI'")
+	assert.Contains(t, res.Body.String(), "SRAPI",
+		"Expected 'SRAPI'")
 }
 
 func TestGetSport(t *testing.T) {
@@ -23,7 +24,8 @@ func TestGetSport(t *testing.T) {
 	startServer().ServeHTTP(res, req)
 
 	assert.Equal(t, 200, res.Code, "Expected OK response")
-	assert.Contains(t, res.Body.String(), "Baseball", "Expected result contains 'Baseball")
+	assert.Contains(t, res.Body.String(), "Baseball",
+		"Expected result contains 'Baseball")
 }
 
 func TestGetSportFail(t *testing.T) {
@@ -32,5 +34,6 @@ func TestGetSportFail(t *testing.T) {
 	startServer().ServeHTTP(res, req)
 
 	assert.Equal(t, 500, res.Code, "Expected error response")
-	assert.Equal(t, "Sport not found.", res.Body.String(), "Expected 'Sport not found.'")
+	assert.Contains(t, res.Body.String(), "Sport not found.",
+		"Expected 'Sport not found.'")
 }
