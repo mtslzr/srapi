@@ -27,7 +27,8 @@ func startServer() http.Handler {
 }
 
 func getDummy(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode("SRAPI")
+	w.WriteHeader(200)
+	w.Write([]byte("SRAPI"))
 	return
 }
 
@@ -35,8 +36,10 @@ func getSport(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	sport, err := queryDb(params["sport"])
 	if err != nil {
-		json.NewEncoder(w).Encode(err)
+		w.WriteHeader(500)
+		w.Write([]byte("Sport not found."))
 	} else {
+		w.WriteHeader(200)
 		json.NewEncoder(w).Encode(sport)
 	}
 	return
