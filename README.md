@@ -2,7 +2,7 @@
 
 SRAPI is a Go-based API for the Sports Reference network of websites.
 
-_Current Version: 0.1.0 (Pre-Release)_
+_Current Version: 0.2.0 (Pre-Release)_
 
 | Master | Develop |
 |:-:|:-:|
@@ -38,6 +38,7 @@ go build -o srapi
 
 ```bash
 go run -v ./...
+Starting server on localhost:5000...
 ```
 
 ### Executable
@@ -49,18 +50,33 @@ Starting server on localhost:5000...
 
 ### Endpoints
 
-#### Dummy
+#### Get Standings
+
+Returns current standings. Requires two-letter ID for sport (e.g. `bs` for baseball).
 
 ```
-GET - /
-GET - /{sport}
+GET /{sport}/standings
+```
+
+#### Get Teams
+
+Returns all current teams. Requires two-letter ID for sport (e.g. `bs` for baseball).
+
+```
+GET /{sport}/teams
+```
+
+#### Get Years
+
+Returns all available years. Requires two-letter ID for sport (e.g. `bs` for baseball).
+
+```
+GET /{sport}/years
 ```
 
 ## Contribution
 
 ### Testing
-
-_NOTE: Not implemented yet._
 
 ```bash
 go test -v ./...
