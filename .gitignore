@@ -14,5 +14,9 @@
 # Build
 srapi
 
+# SQLite
+*.db
+*.sqlite
+
 # VSCode
 .vscode
