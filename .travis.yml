@@ -1,0 +1,12 @@
+language: go
+
+go:
+  - 1.12.x
+
+before_script: cat srapi.sql | sqlite3 srapi.db
+
+script: go test -v ./...
+
+notifications:
+  slack:
+    secure: "Gv0CzKETI0qThKGoNq0RuhR4WsNoAJ6Yv17Jzqx7Dr355iTQ0EaDLLPSS/XSbP1JGWTdxbQWEMwAy7zMz/sv3e0d1RKHLZT6cC2srVxCYora+zG6tawP3sUn2ZRPXtaKAExIKbCT+RHCDuNC3zYgboTqUZjE5DPv8O9EY8IG8YZhoGV2bQlCj2IruKtXTFR+7OGYVyIl3yOVeOeM+TLDASy27ilI8l9SoM3tOe3K0ZaHd2iOaT0vcnU26w7dpDBAp2OWZfMVSRWIB0HWwCDT6+/apecDJHjR4tiXoGrn3TXxQdC7THFe0hgcRODBVhT+kTT8tPUIsWjyY5cH/TUgBuOxgoAZYzfvy/8gEOEfVzxLwxMMgLG9lEYdfuRoAOTzbxBkcZ2/dREkcUVJ9YIIeSV/z+w/kbOLMQiUFr6CV8CE5ZiIYthVyWmMClShl7eC92mGVobRy7Wp2IS60HPTxWCGBdeTilpMeGjwcQO9bA8qMk9CeDm1VTehhlbbZGAqM1mBD4V1R0DW9pynlxp5FkeI+wIU5jlQ2jqDeDqZFtk6ltzZCMDJDl/imHeP9tmVdEXjU/+5EzdckDnrgb3ztSHeSc/l7uSVva4MLmbfQKpjx1rckGSKFxl8jyIDP+AQBeO64M0Be9HUXg2TfcdCSXFV1C84DxXTvslL7GZjb/0="

@@ -21,24 +21,60 @@ type Sport struct {
 
 func startServer() http.Handler {
 	srv := mux.NewRouter()
-	srv.HandleFunc("/", getDummy).Methods("GET")
-	srv.HandleFunc("/{sport}", getSport).Methods("GET")
+	srv.HandleFunc("/{sport}/standings", getStandings).Methods("GET")
+	srv.HandleFunc("/{sport}/teams", getTeams).Methods("GET")
+	srv.HandleFunc("/{sport}/years", getYears).Methods("GET")
 	return srv
 }
 
-func getDummy(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode("SRAPI")
+func getSport(id string, w http.ResponseWriter) Sport {
+	sport, err := queryDb(id)
+	if err != nil {
+		out, _ := json.Marshal(err)
+		sendResponse(500, out, w)
+	}
+	return sport
+}
+
+func getStandings(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	sport := getSport(params["sport"], w)
+
+	stand, err := bsStandings(sport)
+	if err != nil {
+		out, _ := json.Marshal(err)
+		sendResponse(500, out, w)
+	}
+	out, _ := json.Marshal(stand)
+	sendResponse(200, out, w)
 	return
 }
 
-func getSport(w http.ResponseWriter, r *http.Request) {
+func getTeams(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	sport, err := queryDb(params["sport"])
+	sport := getSport(params["sport"], w)
+
+	teams, err := bsTeams(sport)
 	if err != nil {
-		json.NewEncoder(w).Encode(err)
-	} else {
-		json.NewEncoder(w).Encode(sport)
+		out, _ := json.Marshal(err)
+		sendResponse(500, out, w)
 	}
+	out, _ := json.Marshal(teams)
+	sendResponse(200, out, w)
+	return
+}
+
+func getYears(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	sport := getSport(params["sport"], w)
+
+	years, err := bsYears(sport)
+	if err != nil {
+		out, _ := json.Marshal(err)
+		sendResponse(500, out, w)
+	}
+	out, _ := json.Marshal(years)
+	sendResponse(200, out, w)
 	return
 }
 
@@ -52,4 +88,11 @@ func queryDb(sport string) (row Sport, err error) {
 		return row, err
 	}
 	return row, nil
+}
+
+func sendResponse(code int, js []byte, w http.ResponseWriter) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(code)
+	w.Write(js)
+	return
 }
