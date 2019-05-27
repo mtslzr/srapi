@@ -6,7 +6,7 @@ _Current Version: 0.1.0 (Pre-Release)_
 
 | Master | Develop |
 |:-:|:-:|
-|[![Develop](https://travis-ci.com/mtslzr/srapi.svg?branch=develop)](https://travis-ci.com/mtslzr/srapi)|[![Master](https://travis-ci.com/mtslzr/srapi.svg?branch=master)](https://travis-ci.com/mtslzr/srapi)|
+|[![Master](https://travis-ci.com/mtslzr/srapi.svg?branch=master)](https://travis-ci.com/mtslzr/srapi)|[![Develop](https://travis-ci.com/mtslzr/srapi.svg?branch=develop)](https://travis-ci.com/mtslzr/srapi)|
 
 ## Installation
 
