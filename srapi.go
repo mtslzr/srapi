@@ -83,7 +83,8 @@ func queryDb(sport string) (row Sport, err error) {
 	if err != nil {
 		return row, err
 	}
-	err = db.QueryRow("SELECT * FROM sports WHERE id = ?", sport).Scan(&row.ID, &row.Name, &row.Host, &row.Standings, &row.Teams, &row.Years)
+	err = db.QueryRow("SELECT * FROM sports WHERE id = ?", sport).
+		Scan(&row.ID, &row.Name, &row.Host, &row.Standings, &row.Teams, &row.Years)
 	if err != nil {
 		return row, err
 	}
