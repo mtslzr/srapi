@@ -1,11 +1,19 @@
 language: go
 
-go:
-  - 1.12.x
+matrix:
+  include:
+  - go: 1.12.x
+  - go: 1.11.x
+    script: go test -v -mod=vendor ./...
+  - go: 1.10.x
+    script: go test -v ./...
+
+env:
+  - GO111MODULE=on
+
+install: true
 
 before_script: cat srapi.sql | sqlite3 srapi.db
-
-script: go test -v ./...
 
 notifications:
   slack:
