@@ -12,9 +12,10 @@ func bsStandings(bs Sport) (map[string][]string, error) {
 	stands := make(map[string][]string)
 	leagues := []string{"AL", "NL"}
 	divisions := []string{"E", "C", "W"}
+	year := strconv.Itoa(time.Now().Year())
 
 	res, err := soup.Get("https://" + bs.Host + "/" +
-		strings.Replace(bs.Standings, "{year}", strconv.Itoa(time.Now().Year()), 1))
+		strings.Replace(bs.Standings, "{year}", year, 1))
 	if err != nil {
 		return stands, err
 	}
