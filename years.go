@@ -14,8 +14,8 @@ func bsYears(bs Sport) ([]string, error) {
 	doc := soup.HTMLParse(res)
 	links := doc.FindAll("th", "data-stat", "year_ID")
 	for _, link := range links {
-		if link.FullText() != "" {
-			years = append(years, link.FullText())
+		if link.Text() != "" {
+			years = append(years, link.Text())
 		}
 	}
 
