@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -47,7 +48,6 @@ func getStandings(w http.ResponseWriter, r *http.Request) {
 	}
 	out, _ := json.Marshal(stand)
 	sendResponse(200, out, w)
-	return
 }
 
 func getTeams(w http.ResponseWriter, r *http.Request) {
@@ -61,7 +61,6 @@ func getTeams(w http.ResponseWriter, r *http.Request) {
 	}
 	out, _ := json.Marshal(teams)
 	sendResponse(200, out, w)
-	return
 }
 
 func getYears(w http.ResponseWriter, r *http.Request) {
@@ -75,7 +74,6 @@ func getYears(w http.ResponseWriter, r *http.Request) {
 	}
 	out, _ := json.Marshal(years)
 	sendResponse(200, out, w)
-	return
 }
 
 func queryDb(sport string) (row Sport, err error) {
@@ -94,6 +92,8 @@ func queryDb(sport string) (row Sport, err error) {
 func sendResponse(code int, js []byte, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
-	w.Write(js)
-	return
+	_, err := w.Write(js)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
