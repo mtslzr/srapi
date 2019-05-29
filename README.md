@@ -2,7 +2,7 @@
 
 SRAPI is a Go-based API for the Sports Reference network of websites.
 
-_Current Version: 0.2.1 (Pre-Release)_
+_Current Version: 0.2.2 (Pre-Release)_
 
 | Master | Develop |
 |:-:|:-:|
@@ -23,13 +23,12 @@ _NOTE: Database filename is currently hard-coded. This will change in the future
 
 ```bash
 cat srapi.sql | sqlite3 srapi.db
-go get -v ./...
 ```
 
 ### Build
 
 ```bash
-go build -o srapi
+go build -v --mod=vendor
 ```
 
 ## Usage
@@ -79,7 +78,7 @@ GET /{sport}/years
 ### Testing
 
 ```bash
-go test -v ./...
+go test -v --mod=vendor ./...
 ```
 
 ### Deployment
