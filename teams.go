@@ -4,18 +4,17 @@ import (
 	"github.com/anaskhan96/soup"
 )
 
-func bsTeams(bs Sport) ([]string, error) {
-	teams := []string{}
-
+// Get All Teams (Baseball)
+func bsTeams(bs Sport) (teams []string, err error) {
 	res, err := soup.Get("https://" + bs.Host + "/" + bs.Teams)
 	if err != nil {
-		return teams, err
+		return
 	}
+
 	doc := soup.HTMLParse(res)
 	links := doc.FindAll("td", "data-stat", "franchise_name")
 	for _, link := range links {
 		teams = append(teams, link.FullText())
 	}
-
-	return teams, nil
+	return
 }

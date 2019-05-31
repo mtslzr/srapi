@@ -8,6 +8,7 @@ import (
 	"github.com/anaskhan96/soup"
 )
 
+// Get Current Standings (Baseball)
 func bsStandings(bs Sport) (map[string][]string, error) {
 	stands := make(map[string][]string)
 	leagues := []string{"AL", "NL"}
@@ -19,6 +20,7 @@ func bsStandings(bs Sport) (map[string][]string, error) {
 	if err != nil {
 		return stands, err
 	}
+
 	doc := soup.HTMLParse(res)
 	for _, div := range divisions {
 		tables := doc.FindAll("div", "id", "all_standings_"+div)
@@ -31,6 +33,5 @@ func bsStandings(bs Sport) (map[string][]string, error) {
 			}
 		}
 	}
-
 	return stands, nil
 }
