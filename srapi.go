@@ -3,12 +3,13 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
-	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
 	_ "github.com/mattn/go-sqlite3"
 )
+
+var w http.ResponseWriter
 
 // Sport is model for Database data
 type Sport struct {
@@ -20,80 +21,115 @@ type Sport struct {
 	Years     string `json:"years"`
 }
 
+// Start API and set routes
 func startServer() http.Handler {
 	srv := mux.NewRouter()
 	srv.HandleFunc("/{sport}/standings", getStandings).Methods("GET")
 	srv.HandleFunc("/{sport}/teams", getTeams).Methods("GET")
 	srv.HandleFunc("/{sport}/years", getYears).Methods("GET")
+	srv.Use(rwMiddleware)
 	return srv
 }
 
-func getSport(id string, w http.ResponseWriter) Sport {
-	sport, err := queryDb(id)
-	if err != nil {
-		out, _ := json.Marshal(err)
-		sendResponse(500, out, w)
-	}
-	return sport
+// Get Sport by ID
+func getSport(id string) (sport Sport, err error) {
+	sport, err = queryDb(id)
+	return
 }
 
-func getStandings(w http.ResponseWriter, r *http.Request) {
+// Get Current Standings
+func getStandings(rw http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	sport := getSport(params["sport"], w)
+
+	sport, err := getSport(params["sport"])
+	if err != nil {
+		out, _ := json.Marshal(err.Error())
+		sendResponse(500, out)
+		return
+	}
 
 	stand, err := bsStandings(sport)
 	if err != nil {
-		out, _ := json.Marshal(err)
-		sendResponse(500, out, w)
+		out, _ := json.Marshal(err.Error())
+		sendResponse(500, out)
+		return
 	}
+
 	out, _ := json.Marshal(stand)
-	sendResponse(200, out, w)
+	sendResponse(200, out)
 }
 
-func getTeams(w http.ResponseWriter, r *http.Request) {
+// Get All Teams
+func getTeams(rw http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	sport := getSport(params["sport"], w)
+
+	sport, err := getSport(params["sport"])
+	if err != nil {
+		out, _ := json.Marshal(err.Error())
+		sendResponse(500, out)
+		return
+	}
 
 	teams, err := bsTeams(sport)
 	if err != nil {
-		out, _ := json.Marshal(err)
-		sendResponse(500, out, w)
+		out, _ := json.Marshal(err.Error())
+		sendResponse(500, out)
+		return
 	}
+
 	out, _ := json.Marshal(teams)
-	sendResponse(200, out, w)
+	sendResponse(200, out)
 }
 
-func getYears(w http.ResponseWriter, r *http.Request) {
+// Get All Years
+func getYears(rw http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	sport := getSport(params["sport"], w)
+
+	sport, err := getSport(params["sport"])
+	if err != nil {
+		out, _ := json.Marshal(err.Error())
+		sendResponse(500, out)
+		return
+	}
 
 	years, err := bsYears(sport)
 	if err != nil {
-		out, _ := json.Marshal(err)
-		sendResponse(500, out, w)
+		out, _ := json.Marshal(err.Error())
+		sendResponse(500, out)
+		return
 	}
+
 	out, _ := json.Marshal(years)
-	sendResponse(200, out, w)
+	sendResponse(200, out)
 }
 
+// Query Database and return Sport
 func queryDb(sport string) (row Sport, err error) {
 	db, err := sql.Open("sqlite3", "./srapi.db")
 	if err != nil {
-		return row, err
+		return
 	}
+
 	err = db.QueryRow("SELECT * FROM sports WHERE id = ?", sport).
 		Scan(&row.ID, &row.Name, &row.Host, &row.Standings, &row.Teams, &row.Years)
-	if err != nil {
-		return row, err
-	}
-	return row, nil
+	return
 }
 
-func sendResponse(code int, js []byte, w http.ResponseWriter) {
+// Export http.ResponseWriter for use in sendResponse()
+func rwMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+		w = rw
+		next.ServeHTTP(rw, r)
+	})
+}
+
+// Marshal and send response with chosen statusCode
+func sendResponse(code int, js []byte) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 	_, err := w.Write(js)
 	if err != nil {
-		log.Fatal(err)
+		out, _ := json.Marshal(err.Error())
+		sendResponse(500, out)
 	}
 }
