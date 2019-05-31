@@ -2,7 +2,7 @@
 
 SRAPI is a Go-based API for the Sports Reference network of websites.
 
-_Current Version: 0.2.2 (Pre-Release)_
+_Current Version: 0.2.3 (Pre-Release)_
 
 | Master | Develop |
 |:-:|:-:|
