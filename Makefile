@@ -1,8 +1,7 @@
 
 GOCMD=go
 GOBUILD=${GOCMD} build
-GOLINT=golint
-GOLINTCI=golangci-lint
+GOLINT=golangci-lint
 GOMOD=${GOCMD} mod
 GOTEST=${GOCMD} test
 
@@ -20,14 +19,13 @@ build:
 db:
 	cat ${SQL} | ${DBCMD} ${DB}
 
-deps: tidy vendor
+deps: tidy vend
 
 dump:
 	${DBCMD} ${DB} .dump > ${SQL}
 
 lint:
-	${GOLINT} *.go
-	${GOLINTCI} run
+	${GOLINT} run
 
 prep: deps dump
 
