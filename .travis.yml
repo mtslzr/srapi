@@ -8,7 +8,6 @@ env:
   - GO111MODULE=on GOFLAGS="--mod=vendor"
 
 before_script: 
-  - go get golang.org/x/lint/golint
   - curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b . v1.16.0
   - make db
 
