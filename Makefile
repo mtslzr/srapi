@@ -1,7 +1,7 @@
 
 GOCMD=go
 GOBUILD=${GOCMD} build
-GOLINT=${GOCMD} lint
+GOLINT=golint
 GOLINTCI=golangci-lint
 GOMOD=${GOCMD} mod
 GOTEST=${GOCMD} test
