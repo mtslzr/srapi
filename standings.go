@@ -9,7 +9,7 @@ import (
 )
 
 // Get Current Standings (Baseball)
-func bsStandings(bs Sport) map[string][]string {
+func bsStandings(bs Sport) (map[string][]string, error) {
 	stands := make(map[string][]string)
 	leagues := []string{"AL", "NL"}
 	divisions := []string{"E", "C", "W"}
@@ -17,7 +17,9 @@ func bsStandings(bs Sport) map[string][]string {
 
 	res, err := soup.Get("https://" + bs.Host + "/" +
 		strings.Replace(bs.Standings, "{year}", year, 1))
-	checkError(err)
+	if err != nil {
+		return stands, err
+	}
 
 	doc := soup.HTMLParse(res)
 	for _, div := range divisions {
@@ -31,5 +33,5 @@ func bsStandings(bs Sport) map[string][]string {
 			}
 		}
 	}
-	return stands
+	return stands, nil
 }

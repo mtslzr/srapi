@@ -5,9 +5,11 @@ import (
 )
 
 // Get All Years (Baseball)
-func bsYears(bs Sport) (years []string) {
+func bsYears(bs Sport) (years []string, err error) {
 	res, err := soup.Get("https://" + bs.Host + "/" + bs.Years)
-	checkError(err)
+	if err != nil {
+		return
+	}
 
 	doc := soup.HTMLParse(res)
 	links := doc.FindAll("th", "data-stat", "year_ID")

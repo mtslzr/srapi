@@ -51,3 +51,21 @@ func TestGetYears(t *testing.T) {
 	assert.Contains(t, res.Body.String(), "1876",
 		"Expected result contains '1876'")
 }
+
+// Test an invalid endpoint for failure
+func TestInvalidEndpoint(t *testing.T) {
+	res := startEndpoint("/fakeUrl")
+	assert.Equal(t, 404, res.Code, "Expected 404 response")
+	assert.Contains(t, res.Body.String(), "page not found",
+		"Expected proper error message")
+	res = startEndpoint("/fakeUrl/partTwo")
+	assert.Equal(t, 404, res.Code, "Expected 404 response")
+}
+
+// Test an invalid Sport ID for failure
+func TestInvalidSport(t *testing.T) {
+	res := startEndpoint("/xx/standings")
+	assert.Equal(t, 500, res.Code, "Expected server error response")
+	assert.Contains(t, res.Body.String(), "sql: no rows in result set",
+		"Expected proper error message")
+}

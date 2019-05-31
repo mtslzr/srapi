@@ -32,17 +32,28 @@ func startServer() http.Handler {
 }
 
 // Get Sport by ID
-func getSport(id string) Sport {
-	sport, err := queryDb(id)
-	checkError(err)
-	return sport
+func getSport(id string) (sport Sport, err error) {
+	sport, err = queryDb(id)
+	return
 }
 
 // Get Current Standings
 func getStandings(rw http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	sport := getSport(params["sport"])
-	stand := bsStandings(sport)
+
+	sport, err := getSport(params["sport"])
+	if err != nil {
+		out, _ := json.Marshal(err.Error())
+		sendResponse(500, out)
+		return
+	}
+
+	stand, err := bsStandings(sport)
+	if err != nil {
+		out, _ := json.Marshal(err.Error())
+		sendResponse(500, out)
+		return
+	}
 
 	out, _ := json.Marshal(stand)
 	sendResponse(200, out)
@@ -51,8 +62,20 @@ func getStandings(rw http.ResponseWriter, r *http.Request) {
 // Get All Teams
 func getTeams(rw http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	sport := getSport(params["sport"])
-	teams := bsTeams(sport)
+
+	sport, err := getSport(params["sport"])
+	if err != nil {
+		out, _ := json.Marshal(err.Error())
+		sendResponse(500, out)
+		return
+	}
+
+	teams, err := bsTeams(sport)
+	if err != nil {
+		out, _ := json.Marshal(err.Error())
+		sendResponse(500, out)
+		return
+	}
 
 	out, _ := json.Marshal(teams)
 	sendResponse(200, out)
@@ -61,8 +84,20 @@ func getTeams(rw http.ResponseWriter, r *http.Request) {
 // Get All Years
 func getYears(rw http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	sport := getSport(params["sport"])
-	years := bsYears(sport)
+
+	sport, err := getSport(params["sport"])
+	if err != nil {
+		out, _ := json.Marshal(err.Error())
+		sendResponse(500, out)
+		return
+	}
+
+	years, err := bsYears(sport)
+	if err != nil {
+		out, _ := json.Marshal(err.Error())
+		sendResponse(500, out)
+		return
+	}
 
 	out, _ := json.Marshal(years)
 	sendResponse(200, out)
@@ -71,13 +106,13 @@ func getYears(rw http.ResponseWriter, r *http.Request) {
 // Query Database and return Sport
 func queryDb(sport string) (row Sport, err error) {
 	db, err := sql.Open("sqlite3", "./srapi.db")
-	checkError(err)
+	if err != nil {
+		return
+	}
 
 	err = db.QueryRow("SELECT * FROM sports WHERE id = ?", sport).
 		Scan(&row.ID, &row.Name, &row.Host, &row.Standings, &row.Teams, &row.Years)
-	checkError(err)
-
-	return row, nil
+	return
 }
 
 // Export http.ResponseWriter for use in sendResponse()
@@ -88,18 +123,13 @@ func rwMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-// If error, send 500 response
-func checkError(err error) {
-	if err != nil {
-		msg, _ := json.Marshal(err)
-		sendResponse(500, msg)
-	}
-}
-
 // Marshal and send response with chosen statusCode
 func sendResponse(code int, js []byte) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 	_, err := w.Write(js)
-	checkError(err)
+	if err != nil {
+		out, _ := json.Marshal(err.Error())
+		sendResponse(500, out)
+	}
 }
