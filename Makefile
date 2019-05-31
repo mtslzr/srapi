@@ -1,25 +1,44 @@
 
-GOBIN=go
+GOCMD=go
+GOBUILD=${GOCMD} build
+GOLINT=${GOCMD} lint
+GOLINTCI=golangci-lint
+GOMOD=${GOCMD} mod
+GOTEST=${GOCMD} test
+
 PACKAGE=srapi
 
-all: lint test vend build
+DB=${PACKAGE}.db
+DBCMD=sqlite3
+SQL=${PACKAGE}.sql
+
+all: lint test build
 
 build:
-	${GOBIN} build -o ${PACKAGE} -v
+	${GOBUILD} -o ${PACKAGE} -v
+
+db:
+	cat ${SQL} | ${DBCMD} ${DB}
 
 deps: tidy vendor
 
+dump:
+	${DBCMD} ${DB} .dump > ${SQL}
+
 lint:
-	golangci-lint run
+	${GOLINT} *.go
+	${GOLINTCI} run
+
+prep: deps dump
 
 test:
-	${GOBIN} test -v ./...
+	${GOTEST} -v ./...
 
 run: build
 	./${PACKAGE}
 
 tidy:
-	${GOBIN} mod tidy -v
+	${GOMOD} tidy -v
 
 vend:
-	${GOBIN} mod vendor -v
+	${GOMOD} vendor -v
