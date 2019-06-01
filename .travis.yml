@@ -7,14 +7,14 @@ install: true
 env:
   - GO111MODULE=on GOFLAGS="--mod=vendor"
 
-before_script: 
+before_script:
   - curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b ~/bin/ v1.16.0
   - make db
 
-script: 
+script:
   - make
 
 notifications:
   slack:
     rooms:
-      - secure: "Bv5y4U73eNq0BxMz4V5eLhGZGE1skzDbFbPQk2LX5XDA+ehsutYEJqN8rYDJcdYgBZ2Lt1cjcOfQURIbVtGRKSqkdLvkiJ6ro56Ia7P+qwB9/f7vNmKnYx7G0+kVucqAGX51qeD/OuZmD3yheVW3tbEKJ4/1gn3ELi4sXcCloMVUGqbwATVp09ahSmaDociM4kCYvZuKa4CkZbmBk3NHF213wKBjrkxhVC4TdZdPK90bxzRj8DclccQU561HhMyvK8/vQNeQHFidV30Kbc1mC2RdJrDFGZ9sYxfV4zfn/dZAw0G7R3irK+TRI/XLstsf/W7kPwxlB4PF+uNPA5+QunJMpYWNNt3iVffIWmRcesPtNMunHHnoVD0sKP76YJYXhDLiksNdfsWI/6q4XEqaXNPDaxQozIedMSF2lcrpGxUwajfCxQAYWGDTDBt84YE5DUUylhgLweA0GGyWj4Kv9ZDWhT3FcR6k2cLv3vCmEK92c7WYs+umI1Taa3r3tAQlfC2Q3qdSKPtTbQ4FbMjXZbQrzsmwV/PFC79KbZW6L3zfMu61pEkHa/yTeOEGvsBUNozSzTOmxndpGiMVQnf+TTeZhCyYAT5sGiLAuOtAvhfd0z2XgLQBKbkHFfn6x4RuprnIOjOfx1idAyEYuBrsw2eu1jIqwkZEpQ/VydgpDXA="
+      secure: gHV/cKgBYKMgV+6Wqp0wU5N+tM+syAI6GCw726UA8RWkLSErg1aJ+a1FChIZTOtrud+rxRi4y2uEKvYd5xQlbv1Vzp+sHTULX54Ro1YAsFsRysbqHR5O+83GvNepxlFFsuJgv0Wn8us184tb9aaW2KHOIxYQt4kk0gFC40GFRQHcGm6UnicX4Uz44FGwA/TNMi5RjFvWecBzIMF9Cp/o2hk0C3JpBNGCwvRpZ0iwSN3Vri9GqUeE8qRi2gWUf3NslIDZ9J6DdJLt4m2V6/Igbb3V/GIu2pLW3pRfflzdlNxAcdrzU/GPBhe6bKlC1yGRkY7MuF3A/chfj7H5i5rrW8JdPqlgmEFkhjFU+twndy7yYsxr68gdCsWq0lk/vBU2IaUkDIIMWwcL7d28nOtvdjPqa8adOkqqjOqUvQdW4K5V7PHf0r4kIaG/2ZtuPLriWOJboa9RRW3/Wl3nthINd4reMk/8b+Zl1bCvGSE5c2h3ZB2cUTH2HrLR4SLHn3l5OTkspmxN7QvBm68ckcmKyopIm4H2ASjssClILEETYCAfTuz2vBDwor5umLtvuKbRB8ZONaN4hmLbIcJ5RjmwrCrnhfy8c1IFSbPbu8zJM/qzz33zUymdtGljr5V1p/vHBlMvVp7XG8e81Zp/4f81peK4MMZDMdGbUr7ZPXXAOiQ=
