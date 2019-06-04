@@ -25,6 +25,7 @@ type Sport struct {
 func startServer() http.Handler {
 	srv := mux.NewRouter()
 	srv.HandleFunc("/{sport}/standings", getStandings).Methods("GET")
+	srv.HandleFunc("/{sport}/standings/{year}", getStandings).Methods("GET")
 	srv.HandleFunc("/{sport}/teams", getTeams).Methods("GET")
 	srv.HandleFunc("/{sport}/years", getYears).Methods("GET")
 	srv.Use(rwMiddleware)
@@ -48,7 +49,7 @@ func getStandings(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	stand, err := bsStandings(sport)
+	stand, err := bsStandings(sport, params["year"])
 	if err != nil {
 		out, _ := json.Marshal(err.Error())
 		sendResponse(500, out)

@@ -9,11 +9,13 @@ import (
 )
 
 // Get Current Standings (Baseball)
-func bsStandings(bs Sport) (map[string][]string, error) {
+func bsStandings(bs Sport, year string) (map[string][]string, error) {
 	stands := make(map[string][]string)
 	leagues := []string{"AL", "NL"}
 	divisions := []string{"E", "C", "W"}
-	year := strconv.Itoa(time.Now().Year())
+	if year == "" {
+		year = strconv.Itoa(time.Now().Year())
+	}
 
 	res, err := soup.Get("https://" + bs.Host + "/" +
 		strings.Replace(bs.Standings, "{year}", year, 1))
