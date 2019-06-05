@@ -30,6 +30,19 @@ func TestGetStandings(t *testing.T) {
 		"Expected result contains 'Miami Marlins'")
 	assert.Contains(t, res.Body.String(), "Minnesota Twins",
 		"Expected result contains 'Minnesota Twins'")
+
+	res = startEndpoint("/bs/standings/1997")
+	assert.Equal(t, 200, res.Code, "Expected OK response")
+	assert.Contains(t, res.Body.String(), "AL",
+		"Expected result contains 'AL'")
+	assert.Contains(t, res.Body.String(), "NL",
+		"Expected result contains 'NL'")
+	assert.Contains(t, res.Body.String(), "Central",
+		"Expected result contains 'Central'")
+	assert.Contains(t, res.Body.String(), "Florida Marlins",
+		"Expected result contains 'Florida Marlins'")
+	assert.NotContains(t, res.Body.String(), "Arizona Diamondbacks",
+		"Expected result does not contain 'Arizona Diamondbacks'")
 }
 
 // Test GetTeams for current baseball teams.
@@ -58,6 +71,7 @@ func TestInvalidEndpoint(t *testing.T) {
 	assert.Equal(t, 404, res.Code, "Expected 404 response")
 	assert.Contains(t, res.Body.String(), "page not found",
 		"Expected proper error message")
+
 	res = startEndpoint("/fakeUrl/partTwo")
 	assert.Equal(t, 404, res.Code, "Expected 404 response")
 }
