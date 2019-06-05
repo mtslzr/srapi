@@ -6,9 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Filters for year (GetStandings, GetTeams)
+- Endpoint for GetStandings by Year
 ### Changed
 - Changed Travis notification channel in Slack
+- Cleaner, more robust returned data from GetStandings (new structs)
 
 ## [0.2.3] / 2019.05.30
 ### Added
