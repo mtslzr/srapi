@@ -17,7 +17,7 @@ func startEndpoint(ep string) (res *httptest.ResponseRecorder) {
 }
 
 // Test GetStandings for current baseball standings.
-func TestGetStandings(t *testing.T) {
+func TestGetStandingsCurrent(t *testing.T) {
 	res := startEndpoint("/bs/standings")
 	assert.Equal(t, 200, res.Code, "Expected OK response")
 	assert.Contains(t, res.Body.String(), "AL",
@@ -38,8 +38,11 @@ func TestGetStandings(t *testing.T) {
 		"Expected result contains 'Miami Marlins'")
 	assert.Contains(t, res.Body.String(), "Minnesota Twins",
 		"Expected result contains 'Minnesota Twins'")
+}
 
-	res = startEndpoint("/bs/standings/1997")
+// Test GetStandings for previous year.
+func TestGetStandingsYear(t *testing.T) {
+	res := startEndpoint("/bs/standings/1997")
 	assert.Equal(t, 200, res.Code, "Expected OK response")
 	assert.Contains(t, res.Body.String(), "AL",
 		"Expected result contains 'AL'")
@@ -59,8 +62,11 @@ func TestGetStandings(t *testing.T) {
 		"Expected result contains 'Florida Marlins'")
 	assert.NotContains(t, res.Body.String(), "Arizona Diamondbacks",
 		"Expected result does not contain 'Arizona Diamondbacks'")
+}
 
-	res = startEndpoint("/bs/standings/1974")
+// Test GetStandings for previous year with fewer divisions.
+func TestGetStandingsYearFewDivs(t *testing.T) {
+	res := startEndpoint("/bs/standings/1974")
 	assert.Equal(t, 200, res.Code, "Expected OK response")
 	assert.Contains(t, res.Body.String(), "AL",
 		"Expected result contains 'AL'")
@@ -78,6 +84,26 @@ func TestGetStandings(t *testing.T) {
 		"Expected result contains 'Montreal Expos'")
 	assert.NotContains(t, res.Body.String(), "Colorado Rockies",
 		"Expected result does not contain 'Colorado Rockies'")
+}
+
+// Test GetStandings for previous year with no divisions.
+func TestGetStandingsYearNoDiv(t *testing.T) {
+	res := startEndpoint("/bs/standings/1919")
+	assert.Equal(t, 200, res.Code, "Expected OK response")
+	assert.Contains(t, res.Body.String(), "AL",
+		"Expected result contains 'AL'")
+	assert.Contains(t, res.Body.String(), "NL",
+		"Expected result contains 'NL'")
+	assert.NotContains(t, res.Body.String(), "East",
+		"Expected result contains 'East'")
+	assert.Contains(t, res.Body.String(), "pos",
+		"Expected result contains 'pos'")
+	assert.Contains(t, res.Body.String(), "abbr",
+		"Expected result contains 'abbr'")
+	assert.Contains(t, res.Body.String(), "Brooklyn Dodgers",
+		"Expected result contains 'Brooklyn Dodgers'")
+	assert.NotContains(t, res.Body.String(), "New York Mets",
+		"Expected result does not contain 'New York Mets'")
 }
 
 // Test GetTeams for current baseball teams.

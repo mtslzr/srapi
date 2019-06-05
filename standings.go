@@ -66,40 +66,71 @@ func bsStandings(bs Sport, year string) (Standings, error) {
 	doc := soup.HTMLParse(res)
 	for x, league := range standings.Leagues {
 		sections := doc.FindAll("div", "id", "all_standings")
-		for _, section := range sections {
-			headers := section.FindAll("h2")
-			totalDivs := len(sections) * len(headers)
-			for _, header := range headers {
-				if len(league.Divisions) < (totalDivs / len(standings.Leagues)) {
-					league.Divisions = append(league.Divisions, Division{
-						Name: header.FullText(),
-						Abbr: string(header.FullText()[0]),
-					})
+		if len(sections) > 0 {
+			for _, section := range sections {
+				headers := section.FindAll("h2")
+				totalDivs := len(sections) * len(headers)
+				for _, header := range headers {
+					if len(league.Divisions) < (totalDivs / len(standings.Leagues)) {
+						league.Divisions = append(league.Divisions, Division{
+							Name: header.FullText(),
+							Abbr: string(header.FullText()[0]),
+						})
+					}
 				}
 			}
-		}
-		standings.Leagues[x] = league
+			standings.Leagues[x] = league
 
-		for y, division := range league.Divisions {
-			tables := doc.FindAll("div", "id", "all_standings_"+division.Abbr)
-			teams := tables[x].FindAll("tr")
-			for z, team := range teams {
-				if z == 0 {
+			for y, division := range league.Divisions {
+				tables := doc.FindAll("div", "id", "all_standings_"+division.Abbr)
+				teams := tables[x].FindAll("tr")
+				for z, team := range teams {
+					if z == 0 {
+						continue
+					}
+
+					wins, _ := strconv.Atoi(team.Find("td", "data-stat", "W").
+						FullText())
+					losses, _ := strconv.Atoi(team.Find("td", "data-stat", "L").
+						FullText())
+					division.Teams = append(division.Teams, Team{
+						Pos:  z,
+						Name: team.Find("a").FullText(),
+						Abbr: parseTeamURL(team.Find("a")),
+						W:    wins,
+						L:    losses,
+						D:    0,
+					})
+				}
+				standings.Leagues[x].Divisions[y] = division
+			}
+		} else {
+			league.Divisions = append(league.Divisions, Division{
+				Name: league.Name,
+				Abbr: league.Abbr,
+			})
+
+			rows := doc.Find("table", "id", "expanded_standings_overall").
+				FindAll("tr")
+			for y, row := range rows {
+				if y == 0 {
+					continue
+				}
+				if row.Find("td", "data-stat", "lg_ID").FullText() != league.Abbr {
 					continue
 				}
 
-				wins, _ := strconv.Atoi(team.Find("td", "data-stat", "W").FullText())
-				losses, _ := strconv.Atoi(team.Find("td", "data-stat", "L").FullText())
-				division.Teams = append(division.Teams, Team{
-					Pos:  z,
-					Name: team.Find("a").FullText(),
-					Abbr: parseTeamURL(team.Find("a")),
+				wins, _ := strconv.Atoi(row.Find("td", "data-stat", "W").FullText())
+				losses, _ := strconv.Atoi(row.Find("td", "data-stat", "L").FullText())
+				league.Divisions[0].Teams = append(league.Divisions[0].Teams, Team{
+					Pos:  y,
+					Name: row.Find("a").Attrs()["title"],
+					Abbr: row.Find("td", "data-stat", "team_ID").FullText(),
 					W:    wins,
 					L:    losses,
 					D:    0,
 				})
 			}
-			standings.Leagues[x].Divisions[y] = division
 		}
 	}
 
