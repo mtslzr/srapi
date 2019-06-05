@@ -24,8 +24,16 @@ func TestGetStandings(t *testing.T) {
 		"Expected result contains 'AL'")
 	assert.Contains(t, res.Body.String(), "NL",
 		"Expected result contains 'NL'")
+	assert.Contains(t, res.Body.String(), "East",
+		"Expected result contains 'East'")
+	assert.Contains(t, res.Body.String(), "Central",
+		"Expected result contains 'Central'")
 	assert.Contains(t, res.Body.String(), "West",
 		"Expected result contains 'West'")
+	assert.Contains(t, res.Body.String(), "pos",
+		"Expected result contains 'pos'")
+	assert.Contains(t, res.Body.String(), "abbr",
+		"Expected result contains 'abbr'")
 	assert.Contains(t, res.Body.String(), "Miami Marlins",
 		"Expected result contains 'Miami Marlins'")
 	assert.Contains(t, res.Body.String(), "Minnesota Twins",
@@ -37,12 +45,39 @@ func TestGetStandings(t *testing.T) {
 		"Expected result contains 'AL'")
 	assert.Contains(t, res.Body.String(), "NL",
 		"Expected result contains 'NL'")
+	assert.Contains(t, res.Body.String(), "East",
+		"Expected result contains 'East'")
 	assert.Contains(t, res.Body.String(), "Central",
 		"Expected result contains 'Central'")
+	assert.Contains(t, res.Body.String(), "West",
+		"Expected result contains 'West'")
+	assert.Contains(t, res.Body.String(), "pos",
+		"Expected result contains 'pos'")
+	assert.Contains(t, res.Body.String(), "abbr",
+		"Expected result contains 'abbr'")
 	assert.Contains(t, res.Body.String(), "Florida Marlins",
 		"Expected result contains 'Florida Marlins'")
 	assert.NotContains(t, res.Body.String(), "Arizona Diamondbacks",
 		"Expected result does not contain 'Arizona Diamondbacks'")
+
+	res = startEndpoint("/bs/standings/1974")
+	assert.Equal(t, 200, res.Code, "Expected OK response")
+	assert.Contains(t, res.Body.String(), "AL",
+		"Expected result contains 'AL'")
+	assert.Contains(t, res.Body.String(), "NL",
+		"Expected result contains 'NL'")
+	assert.Contains(t, res.Body.String(), "East",
+		"Expected result contains 'East'")
+	assert.Contains(t, res.Body.String(), "West",
+		"Expected result contains 'West'")
+	assert.Contains(t, res.Body.String(), "pos",
+		"Expected result contains 'pos'")
+	assert.Contains(t, res.Body.String(), "abbr",
+		"Expected result contains 'abbr'")
+	assert.Contains(t, res.Body.String(), "Montreal Expos",
+		"Expected result contains 'Montreal Expos'")
+	assert.NotContains(t, res.Body.String(), "Colorado Rockies",
+		"Expected result does not contain 'Colorado Rockies'")
 }
 
 // Test GetTeams for current baseball teams.

@@ -42,46 +42,14 @@ func bsStandings(bs Sport, year string) (Standings, error) {
 	standings := Standings{}
 	standings.Leagues = []League{
 		{
-			Name: "American League",
-			Abbr: "AL",
-			Divisions: []Division{
-				{
-					Name:  "East",
-					Abbr:  "E",
-					Teams: []Team{},
-				},
-				{
-					Name:  "Central",
-					Abbr:  "C",
-					Teams: []Team{},
-				},
-				{
-					Name:  "West",
-					Abbr:  "W",
-					Teams: []Team{},
-				},
-			},
+			Name:      "American League",
+			Abbr:      "AL",
+			Divisions: []Division{},
 		},
 		{
-			Name: "National League",
-			Abbr: "NL",
-			Divisions: []Division{
-				{
-					Name:  "East",
-					Abbr:  "E",
-					Teams: []Team{},
-				},
-				{
-					Name:  "Central",
-					Abbr:  "C",
-					Teams: []Team{},
-				},
-				{
-					Name:  "West",
-					Abbr:  "W",
-					Teams: []Team{},
-				},
-			},
+			Name:      "National League",
+			Abbr:      "NL",
+			Divisions: []Division{},
 		},
 	}
 
@@ -97,6 +65,21 @@ func bsStandings(bs Sport, year string) (Standings, error) {
 
 	doc := soup.HTMLParse(res)
 	for x, league := range standings.Leagues {
+		sections := doc.FindAll("div", "id", "all_standings")
+		for _, section := range sections {
+			headers := section.FindAll("h2")
+			totalDivs := len(sections) * len(headers)
+			for _, header := range headers {
+				if len(league.Divisions) < (totalDivs / len(standings.Leagues)) {
+					league.Divisions = append(league.Divisions, Division{
+						Name: header.FullText(),
+						Abbr: string(header.FullText()[0]),
+					})
+				}
+			}
+		}
+		standings.Leagues[x] = league
+
 		for y, division := range league.Divisions {
 			tables := doc.FindAll("div", "id", "all_standings_"+division.Abbr)
 			teams := tables[x].FindAll("tr")
@@ -118,7 +101,6 @@ func bsStandings(bs Sport, year string) (Standings, error) {
 			}
 			standings.Leagues[x].Divisions[y] = division
 		}
-		standings.Leagues[x] = league
 	}
 
 	return standings, nil
